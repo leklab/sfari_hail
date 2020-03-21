@@ -218,8 +218,8 @@ def make_info_expr(ht: hl.Table) -> Dict[str, hl.expr.Expression]:
     :rtype: Dict of str: Expression
     '''
     info_dict = {
-        'FS': ht.info.FS,
-        'InbreedingCoeff': ht.info.InbreedingCoeff,
+#        'FS': ht.info.FS,
+#        'InbreedingCoeff': ht.info.InbreedingCoeff,
         'MQ': ht.info.MQ,
         'MQRankSum': ht.info.MQRankSum,
         'QD': ht.info.QD,
@@ -362,7 +362,7 @@ def prepare_ht_export(ht: hl.Table) -> hl.Table:
 
     new_info_dict = {i.replace('gnomad_', '').replace('_adj', ''): j for i,j in INFO_DICT.items()}
 
-    ht = ht.annotate(info=hl.struct(**make_info_expr(ht)))
+    #ht = ht.annotate(info=hl.struct(**make_info_expr(ht)))
     ht = ht.annotate(info=ht.info.annotate(**unfurl_nested_annotations(ht)))
 
 

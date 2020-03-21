@@ -395,7 +395,7 @@ def reformat_general_fields(ht):
     '''  
 
     ht = ht.select_globals()
-
+    '''
     ht = ht.annotate(
         allele_info=hl.struct(
         #BaseQRankSum=ht.BaseQRankSum,
@@ -414,7 +414,7 @@ def reformat_general_fields(ht):
         VQSR_POSITIVE_TRAIN_SITE=ht.info.VQSR_POSITIVE_TRAIN_SITE,
         )
     )  
-
+    '''
     # Derived top level fields
     ht = ht.annotate(
         alt=get_expr_for_alt_allele(ht),

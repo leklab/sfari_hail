@@ -23,8 +23,8 @@ def generate_split_alleles(mt: hl.MatrixTable) -> hl.Table:
                             has_star=hl.any(lambda a: a == '*', mt.alleles))
 
     mt = mt.annotate_rows(allele_data=allele_data.annotate(**add_variant_type(mt.alleles)))
-    mt = hl.split_multi_hts(mt,left_aligned=True)
-    #mt = hl.split_multi_hts(mt)
+    #mt = hl.split_multi_hts(mt,left_aligned=True)
+    mt = hl.split_multi_hts(mt)
 
     allele_type = (hl.case()
                    .when(hl.is_snp(mt.alleles[0], mt.alleles[1]), 'snv')
