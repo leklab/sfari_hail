@@ -23,6 +23,9 @@ def generate_split_alleles(mt: hl.MatrixTable) -> hl.Table:
                             has_star=hl.any(lambda a: a == '*', mt.alleles))
 
     mt = mt.annotate_rows(allele_data=allele_data.annotate(**add_variant_type(mt.alleles)))
+
+    #mt = mt.annotate_entries(PL=hl.empty_array(hl.tint32))
+    mt = mt.annotate_entries(PL=hl.null(hl.tarray(hl.tint32)))
     #mt = hl.split_multi_hts(mt,left_aligned=True)
     mt = hl.split_multi_hts(mt)
 

@@ -19,7 +19,9 @@ def run_pipeline(args):
     grch37_contigs = [x for x in rg.contigs if not x.startswith('GL') and not x.startswith('M')]
     contig_dict = dict(zip(grch37_contigs, ['chr'+x for x in grch37_contigs]))
 
-    mt = hl.import_vcf(args.vcf,reference_genome='GRCh38',contig_recoding=contig_dict)
+    #mt = hl.import_vcf(args.vcf,reference_genome='GRCh38',contig_recoding=contig_dict)
+    mt = hl.import_vcf(args.vcf,reference_genome='GRCh38',contig_recoding=contig_dict,array_elements_required=False)
+    #mt = hl.import_vcf(args.vcf,reference_genome='GRCh38',contig_recoding=contig_dict,array_elements_required=False,call_fields=['DP','AD','GQ'])
 	
     #Split alleles
     mt = generate_split_alleles(mt)
