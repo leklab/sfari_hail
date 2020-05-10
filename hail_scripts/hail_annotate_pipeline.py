@@ -35,7 +35,7 @@ def run_pipeline(args):
     #pprint.pprint(ht.show())
 
     #VEP Annotate the Hail table (ie. sites-only)
-    ht = hl.vep(ht, 'vep85-loftee-ruddle.json')
+    ht = hl.vep(ht, 'vep85-loftee-ruddle-b38.json')
     #pprint.pprint(ht.describe())
     #pprint.pprint(ht.show())
 
