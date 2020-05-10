@@ -1,4 +1,4 @@
-# pcgc_hail
+# sfari_hail
 Hail v0.2 pipeline used to VCF file from SFARI for export into elastic search.
 
 ## Requirements

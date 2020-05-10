@@ -3,3 +3,4 @@ __pycache__/
 *.log
 sfari_test_exomes.ht/
 spark*
+hail_builds/environment.tar.gz
