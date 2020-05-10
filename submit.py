@@ -9,6 +9,7 @@ import socket
 p = argparse.ArgumentParser()
 p.add_argument("-c", "--cluster", default="no-vep")
 p.add_argument("--run-locally", action="store_true", help="Run using a local hail install instead of submitting to dataproc. Assumes 'spark-submit' is on $PATH.")
+p.add_argument("--master", help="Run using hail on local institutional cluster.  Assumes 'spark-submit' is on $PATH.", default="")
 p.add_argument("--spark-home", default=os.environ.get("SPARK_HOME"), help="The local spark directory (default: $SPARK_HOME). Required for --run-locally")
 p.add_argument("--cpu-limit", help="How many CPUs to use when running locally. Defaults to all available CPUs.", type=int)
 p.add_argument("--driver-memory", help="Spark driver memory limit when running locally")
@@ -20,6 +21,7 @@ args, unparsed_args = p.parse_known_args()
 
 hail_jar = "hail_builds/hail-0.2-6da0d3571629b326a197a56c6803e4c8841e61fb-Spark-2.4.0.jar"
 hail_zip = "hail_builds/hail-0.2-6da0d3571629b326a197a56c6803e4c8841e61fb.zip"
+hail_environment = "hail_builds/environment.tar.gz"
 
 script = args.script
 script_args = " ".join(['"%s"' % arg for arg in unparsed_args])
@@ -57,6 +59,37 @@ if args.run_locally:
         --py-files %(hail_zip)s \
         "%(script)s" %(script_args)s
     """ % locals()
+
+elif args.master != "":
+
+    spark_home = args.spark_home
+
+    driver_memory = args.driver_memory if args.driver_memory else "5G"
+    executor_memory = args.executor_memory if args.executor_memory else "5G"
+    num_executors = args.num_executors
+    master = args.master
+
+    command = """%(spark_home)s/bin/spark-submit \
+        --master %(master)s \
+        --driver-memory %(driver_memory)s \
+        --executor-memory %(executor_memory)s \
+        --total-executor-cores %(num_executors)s \
+        --conf spark.driver.extraJavaOptions=-Xss4M \
+        --conf spark.executor.extraJavaOptions=-Xss4M \
+        --conf spark.executor.memoryOverhead=5g \
+        --conf spark.driver.maxResultSize=30g \
+        --conf spark.kryoserializer.buffer.max=1g \
+        --conf spark.memory.fraction=0.1 \
+        --conf spark.default.parallelism=1 \
+        --jars %(hail_jar)s \
+        --conf spark.driver.extraClassPath=%(hail_jar)s \
+        --conf spark.executor.extraClassPath=%(hail_jar)s \
+        --py-files %(hail_zip)s \
+        --archives %(hail_environment)s \
+        "%(script)s" %(script_args)s
+    """ % locals()
+
+
 else:
     cluster = args.cluster
 
