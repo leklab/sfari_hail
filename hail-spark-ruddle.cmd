@@ -5,11 +5,13 @@
 #SBATCH --ntasks-per-node=1
 #SBATCH --output=sparkjob-%j.out
 
+#Multi-node script taken from Stanford website https://www.sherlock.stanford.edu/docs/software/using/spark/
+
 ## --------------------------------------
 ## 0. Preparation
 ## --------------------------------------
 
-# load the Spark module
+#load the Spark module
 #module load spark
 
 export SPARK_HOME=/gpfs/ycga/project/lek/shared/tools/spark-2.4.3-bin-hadoop2.7
@@ -70,7 +72,7 @@ python submit.py --master ${MASTER_URL} hail_scripts/hail_annotate_pipeline.py \
 				--spark-home $SPARK_HOME --num-executors $((SLURM_NTASKS * SLURM_CPUS_PER_TASK)) \
 				--driver-memory 16G --executor-memory 8G \
 				-i ~/scratch60/SFARI/20190729_Merged-GATK4+GLnexus_cleaned_Dec62019_chr_1_monoa_rem.vcf.bgz \
-				-m ~/project/SFARI/rand_meta.tsv
+				-m ~/project/SFARI/SPARK_meta.tsv
 
 ## --------------------------------------
 ## 4. Clean up

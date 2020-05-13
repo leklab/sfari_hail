@@ -76,7 +76,9 @@ def annotate_frequencies(mt: hl.MatrixTable, meta_ht: hl.Table) -> hl.Table:
         #pprint.pprint(subgroup_dict)
         subgroup_dict['group'] = 'adj'
 
-        call_stats = hl.agg.filter(mt.group_membership[i] & mt.adj, hl.agg.call_stats(mt.GT, mt.alleles))
+        #call_stats = hl.agg.filter(mt.group_membership[i] & mt.adj, hl.agg.call_stats(mt.GT, mt.alleles))
+        #Remove adj filter but keep the adj annotation
+        call_stats = hl.agg.filter(mt.group_membership[i], hl.agg.call_stats(mt.GT, mt.alleles))
 
         call_stats_bind = hl.bind(lambda cs: cs.annotate(
             AC=cs.AC[1], AF=cs.AF[1], homozygote_count=cs.homozygote_count[1]

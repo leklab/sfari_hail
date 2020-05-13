@@ -47,7 +47,7 @@ def run_pipeline(args):
     #pprint.pprint(ht.describe())
     #pprint.pprint(ht.show())
 
-    ht.write('sfari_test_exomes.ht',overwrite=True)
+    ht.write('/home/ml2529/scratch60/SFARI/sfari_test_exomes.ht',overwrite=True)
     #export_ht_to_es(ht)
 
     #ht = hl.read_table('/home/ml2529/PCGC_dev/data/pcgc_chr20_100samples.ht')
