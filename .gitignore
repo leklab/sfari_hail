@@ -4,3 +4,5 @@ __pycache__/
 sfari_test_exomes.ht/
 spark*
 hail_builds/environment.tar.gz
+clinvar.vcf.gz
+clinvar.ht/

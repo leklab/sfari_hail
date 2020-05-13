@@ -136,14 +136,14 @@ def import_vcf(
 
 def populate_clinvar():
 
-    #clinvar_release_date = _parse_clinvar_release_date('clinvar.vcf.gz')
-    #mt = import_vcf('clinvar.vcf.gz', "37", drop_samples=True, min_partitions=2000, skip_invalid_loci=True)
-    #mt = mt.annotate_globals(version=clinvar_release_date)
+    clinvar_release_date = _parse_clinvar_release_date('clinvar.vcf.gz')
+    mt = import_vcf('clinvar.vcf.gz', "38", drop_samples=True, min_partitions=2000, skip_invalid_loci=True)
+    mt = mt.annotate_globals(version=clinvar_release_date)
 
 
-    '''
+   
     print("\n=== Running VEP ===")
-    mt = hl.vep(mt, 'vep85-loftee-local.json', name="vep")
+    mt = hl.vep(mt, 'vep85-loftee-ruddle-b38.json', name="vep")
 
     print("\n=== Processing ===")
     mt = mt.annotate_rows(
@@ -193,20 +193,20 @@ def populate_clinvar():
         xpos=get_expr_for_xpos(mt.locus),
     )
 
-    #print("\n=== Summary ===")
-    #hl.summarize_variants(mt)
+    print("\n=== Summary ===")
+    hl.summarize_variants(mt)
 
 
     # Drop key columns for export
     rows = mt.rows()
     rows = rows.order_by(rows.variant_id).drop("locus", "alleles")
     rows.write('clinvar.ht',overwrite=True)
+    
     '''
     print("\n=== Exporting to Elasticsearch ===")
     rows = hl.read_table('clinvar.ht')
     export_ht_to_es(rows, index_name = 'clinvar_grch37',index_type = 'variant')
-
-
+    '''
 
 if __name__ == "__main__":
     hl.init()
