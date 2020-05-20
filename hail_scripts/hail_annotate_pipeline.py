@@ -11,46 +11,33 @@ from export_ht_to_es import *
 def run_pipeline(args):
     hl.init(log='./hail_annotation_pipeline.log')
 
-    #mt = hl.import_vcf('vcf_files/pcgc_chr20_slice.vcf.bgz',reference_genome='GRCh37')
-    #mt = hl.import_vcf(args.vcf,reference_genome='GRCh37')
-    #mt = hl.import_vcf(args.vcf,reference_genome='GRCh38')
-
+	#Adding 'chr' prefix so to be compatible
     rg = hl.get_reference('GRCh37')
     grch37_contigs = [x for x in rg.contigs if not x.startswith('GL') and not x.startswith('M')]
     contig_dict = dict(zip(grch37_contigs, ['chr'+x for x in grch37_contigs]))
 
-    #mt = hl.import_vcf(args.vcf,reference_genome='GRCh38',contig_recoding=contig_dict)
-    mt = hl.import_vcf(args.vcf,reference_genome='GRCh38',contig_recoding=contig_dict,array_elements_required=False)
-    #mt = hl.import_vcf(args.vcf,reference_genome='GRCh38',contig_recoding=contig_dict,array_elements_required=False,call_fields=['DP','AD','GQ'])
+    '''
+    Import VCF   
+    '''
+
+    mt = hl.import_vcf(args.vcf,reference_genome='GRCh38',contig_recoding=contig_dict,array_elements_required=False,force_bgz=True,filter='MONOALLELIC')
 	
     #Split alleles
     mt = generate_split_alleles(mt)
-    #pprint.pprint(mt.describe())
-    #pprint.pprint(mt.show(include_row_fields=True))
 
     #Annotate Population frequencies for now
     meta_ht = hl.import_table(args.meta,delimiter='\t',key='ID')
     ht = annotate_frequencies(mt,meta_ht)
-    #pprint.pprint(ht.describe())
-    #pprint.pprint(ht.show())
 
-    #VEP Annotate the Hail table (ie. sites-only)
+    #VEP Annotate the Hail table (ie. sites-only) using GRCh38 configuration file
     ht = hl.vep(ht, 'vep85-loftee-ruddle-b38.json')
-    #pprint.pprint(ht.describe())
-    #pprint.pprint(ht.show())
 
+	#Reformatting for Elasticsearch export
     ht = prepare_ht_export(ht)
-    #pprint.pprint(ht.describe()) 
-    #pprint.pprint(ht.show())
-
     ht = prepare_ht_for_es(ht)
-    #pprint.pprint(ht.describe())
-    #pprint.pprint(ht.show())
 
-    ht.write('/home/ml2529/scratch60/SFARI/sfari_test_exomes.ht',overwrite=True)
-    #export_ht_to_es(ht)
+    ht.write(args.out,overwrite=True)
 
-    #ht = hl.read_table('/home/ml2529/PCGC_dev/data/pcgc_chr20_100samples.ht')
     #ht = hl.read_table('/home/ml2529/PCGC_dev/data/pcgc_exomes.ht')
     #export_ht_to_es(ht)
 
@@ -59,6 +46,7 @@ if __name__ == '__main__':
 
     parser.add_argument('--vcf', '--input', '-i', help='bgzipped VCF file (.vcf.bgz)', required=True)
     parser.add_argument('--meta', '-m', help='Meta file containing sample population and sex', required=True)
+    parser.add_argument('--out', '-o', help='Hail table output file name', required=True)
 
     args = parser.parse_args()
     run_pipeline(args)

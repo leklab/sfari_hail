@@ -35,6 +35,8 @@ export SPARK_LOG_DIR=${SPARK_LOG_DIR:-$HOME/.spark/logs}
 export SPARK_LOCAL_DIRS=${SPARK_LOCAL_DIRS:-/tmp/${USER}/spark}
 mkdir -p $SPARK_LOG_DIR $SPARK_WORKER_DIR
 
+export SPARK_WORKER_OPTS="-Dspark.worker.cleanup.enabled=true -Dspark.worker.cleanup.interval=60 -Dspark.worker.cleanup.appDataTtl=60"
+
 ## --------------------------------------
 ## 1. Start the Spark cluster master
 ## --------------------------------------
@@ -68,11 +70,20 @@ srun  --output=$SPARK_LOG_DIR/spark-%j-workers.out --label \
 #             --total-executor-cores $((SLURM_NTASKS * SLURM_CPUS_PER_TASK)) \
 #             $SPARK_HOME/examples/src/main/python/pi.py 100
 
-python submit.py --master ${MASTER_URL} hail_scripts/hail_annotate_pipeline.py \
+rm ~/hail_progress.txt
+
+for c in {14..22} X
+do
+	d=`date`
+	echo "$d Processing: 20190729_Merged-GATK4+GLnexus_cleaned_Dec62019_chr_${c}.vcf.gz" >> ~/hail_progress.txt
+
+	python submit.py --master ${MASTER_URL} hail_scripts/hail_annotate_pipeline.py \
 				--spark-home $SPARK_HOME --num-executors $((SLURM_NTASKS * SLURM_CPUS_PER_TASK)) \
 				--driver-memory 16G --executor-memory 8G \
-				-i ~/scratch60/SFARI/20190729_Merged-GATK4+GLnexus_cleaned_Dec62019_chr_1_monoa_rem.vcf.bgz \
-				-m ~/project/SFARI/SPARK_meta.tsv
+				-i ~/scratch60/SFARI/20190729_Merged-GATK4+GLnexus_cleaned_Dec62019_chr_${c}.vcf.gz \
+				-m ~/project/SFARI/SPARK_meta.tsv \
+				-o ~/scratch60/SFARI/hail_tables/20190729_Merged-GATK4+GLnexus_cleaned_Dec62019_chr_${c}.ht
+done
 
 ## --------------------------------------
 ## 4. Clean up
