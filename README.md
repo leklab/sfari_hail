@@ -58,7 +58,7 @@ python submit.py --run-locally ./hail_scripts/hail_annotate_pipeline.py --spark-
 ## Exome VCF specific issues
 1. GLNexus option used for joint calling creates instances where some PL values are missing. This is problematic for splittling multi-allelic sites.  
 **Current work around:**  
-Set PL values to null/empty. Code is <a ref="https://github.com/leklab/sfari_hail/commit/d8bf0f206c762ce2f5ccbba1cdca4b1f4e655d74">here</a>  
+Set PL values to null/empty. Code is <a href="https://github.com/leklab/sfari_hail/commit/d8bf0f206c762ce2f5ccbba1cdca4b1f4e655d74">here</a>  
 DP and GQ are used to consider high quality (HQ) genotype calls for adjusted counts. Only DP is used for HQ consideration as GQ cannot not be calculated in all scenarios due to missing PL.  
 
 2. There currently is no explicit PASS filter so any downstream filter dependent features cannot be used
