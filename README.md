@@ -30,6 +30,10 @@ Please refer to https://github.com/Ensembl/ensembl-vep/blob/release/100/README.m
 vep85-loftee-cyan.json
 vep85-loftee-ruddle-b38.json
 vep85-loftee-ruddle.json
+
+# Install the scripts themselves!
+git clone https://github.com/leklab/sfari_hail.git
+pip install -r requirements.txt
 ```
 
 
@@ -49,11 +53,35 @@ Step 5: Reformat and export to Elastic Search
 
 **Output:** Hail table - individual genotypes removed, VEP functional annotation, various summary counts/metrics, flattened structure for export to Elastic Search.
 
-## Example Usage
+## Example: Annotation and output to hail table
 ```
-python submit.py --run-locally ./hail_scripts/hail_annotate_pipeline.py --spark-home $SPARK_HOME --driver-memory 16G --executor-memory 8G -i input_file -m meta_file
+python submit.py --run-locally ./hail_scripts/hail_annotate_pipeline.py \
+--spark-home $SPARK_HOME --driver-memory 16G --executor-memory 8G \
+-i input_file -m meta_file
 ```
 
+## Example: Scripts to submit to Slurm managed HPC
+```
+hail-spark-ruddle.cmd
+hail-spark-ruddle-wgs.cmd
+```
+
+## Example: Upload hail table to Elastic Search database
+```
+python submit.py --run-locally hail_scripts/populate_wgs_data.py \
+--spark-home /home/ubuntu/bin/spark-2.4.3-bin-hadoop2.7 \
+--cpu-limit 4 --driver-memory 16G --executor-memory 8G \
+-i input.ht
+```
+
+## Example: Scripts to upload all hail table chr
+```
+upload_all_vcf.sh
+upload_all_wgs.sh
+```
+
+## Note on subsetting Genome data to "genic" regions
+The genome data was subsetted to only genic regions using to the <a href="https://github.com/leklab/sfari_hail/blob/master/hail_scripts/hail_wgs_annotate_pipeline.py#L19-L25">hail command</a> and the Gencode processed GTF file into bed file.  
 
 ## Exome VCF specific issues
 1. GLNexus option used for joint calling creates instances where some PL values are missing. This is problematic for splittling multi-allelic sites.  
@@ -61,13 +89,13 @@ python submit.py --run-locally ./hail_scripts/hail_annotate_pipeline.py --spark-
 Set PL values to null/empty. Code changes are <a href="https://github.com/leklab/sfari_hail/commit/d8bf0f206c762ce2f5ccbba1cdca4b1f4e655d74">here</a>  
 DP and GQ are used to consider high quality (HQ) genotype calls for adjusted counts. Only DP is used for HQ consideration as GQ cannot not be calculated in all scenarios due to missing PL. Code changes are <a href="https://github.com/leklab/sfari_hail/commit/27caf5d2798c875250dbe2d32d989bcf2a1c3e39">here</a>  
 
-2. There currently is no explicit PASS filter so any downstream filter dependent features cannot be used
+2. There currently is no explicit PASS filter so any downstream filter dependent features cannot be used.
 
 3. The MONOALLELIC filter and sites are problematic after multi-allelic sites are split into multiple bi-allelic sites. The biggest issue is that alleles can be represented multiple times across VCF lines  
 **Current work around:**  
 Variants with the `MONOALLELIC` filter are explicitly removed. Code changes are <a href="https://github.com/leklab/sfari_hail/commit/b98d0ac94d1417f551de38f345dcb60476a2a5c8">here</a>
 
-4. Hail assumes GRCh38 VCF data has the `chr` prefix. Chromosomes in this VCF does not have this prefix so the `chr` was appended on VCF import.
+4. Hail assumes GRCh38 VCF data has the `chr` prefix. Chromosomes in this VCF does not have this prefix so the `chr` was appended on VCF import. Code detailed <a href="https://github.com/leklab/sfari_hail/blob/master/hail_scripts/hail_annotate_pipeline.py#L15-L17"here</a>
 
 ## Genome VCF specific issues
 1. HQ genotype filter and downstream counts is not behaving correctly. This may be due to the non-standard formatting of the individual genotype field.  
