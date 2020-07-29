@@ -1,4 +1,4 @@
-# Pipeline used to annotate Exome and Genome
+# Hail based Pipeline for SFARI Genomics projects
 Hail v0.2 pipeline used to prepare VCF file from SFARI and export into elastic search database.
 
 ## Requirements
@@ -8,6 +8,28 @@ Java 1.8
 Spark-2.4
 VEP v85 (with LOFETEE plugin)
 ```
+
+## Installation
+Example installation on a clean Ubuntu Linux VM
+```
+# python and pip
+sudo apt-get install python
+sudo apt-get install python-pip
+sudo pip install --upgrade pip
+
+# Java 8
+sudo apt-get install openjdk-8-jdk
+
+# Spark 2.4
+
+# VEP v85
+
+# Note after installing VEP the vep hail configuration file needs to be edited
+vep85-loftee-cyan.json
+vep85-loftee-ruddle-b38.json
+vep85-loftee-ruddle.json
+```
+
 
 ## High level summary of Pipeline steps
 ```
@@ -32,7 +54,8 @@ python submit.py --run-locally ./hail_scripts/hail_annotate_pipeline.py --spark-
 
 
 ## Exome specific issues
-1. GLNexus option used for joint calling creates instances where some PL values are missing. This is problematic for splittling multi-allelic sites. 
+1. GLNexus option used for joint calling creates instances where some PL values are missing. This is problematic for splittling multi-allelic sites.  
+
 Current work around:  
 Set PL values to null/empty  
 DP and GQ are used to consider high quality genotype calls for adjusted counts. Only DP is used for HQ consideration as GQ cannot not be calculated in all scenarios due to missing PL.  
@@ -40,8 +63,11 @@ DP and GQ are used to consider high quality genotype calls for adjusted counts. 
 2. There currently is no explicit PASS filter so any downstream filter dependent features cannot be used
 
 3. The MONOALLELIC filter and sites are problematic after multi-allelic sites are split into multiple bi-allelic sites. The biggest issue is that alleles can be represented multiple times across VCF lines  
+
 Current work around:  
 Variants with the MONOALLELIC filter are explicitly removed
+
+4. Hail assumes GRCh38 VCF data has the `chr` prefix. Chromosomes in this VCF does not have this prefix so the `chr` was appended on VCF import.
 
 ## Wookie mistakes
 Python 3.6 is not the default python  
