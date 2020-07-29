@@ -20,12 +20,10 @@ Step 5: Reformat and export to Elastic Search
 
 
 ## Inputs and Outputs
-```
-Input 1: bgzipped VCF created by GATK. Other VCF files created by other variant callers has not been tested
-Input 2: Tab separated meta file. See example_meta.tsv for format.
+Input 1: bgzipped VCF created by GATK. Other VCF files created by other variant callers has not been tested 
+Input 2: Tab separated meta file. See example_meta.tsv for format. 
 
 Output: Hail table - individual genotypes removed, VEP functional annotation, various summary counts/metrics, flattened structure for export to Elastic Search.
-```
 
 ## Example Usage
 ```
