@@ -22,7 +22,7 @@ ds = hl.read_table(args.ht_url)
 print("\n=== Exporting to Elasticsearch ===")
 '''
 
-def export_ht_to_es(ht, host = '172.23.117.23', port = 9200, index_name = 'pcgc_chr20_test',index_type = 'variant',es_block_size = 200,num_shards = 1):
+def export_ht_to_es(ht, host = 'localhost', port = 9200, index_name = 'test',index_type = 'variant',es_block_size = 200,num_shards = 1):
 
 	es = ElasticsearchClient(host, port)
 	
@@ -32,7 +32,7 @@ def export_ht_to_es(ht, host = '172.23.117.23', port = 9200, index_name = 'pcgc_
 	    index_type_name=index_type,
 	    block_size=es_block_size,
 	    num_shards=num_shards,
-	    delete_index_before_exporting=True,
+	    delete_index_before_exporting=False,
 	    export_globals_to_index_meta=True,
 	    verbose=True,
 	)
