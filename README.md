@@ -20,8 +20,8 @@ Step 5: Reformat and export to Elastic Search
 
 
 ## Inputs and Outputs
-Input 1: bgzipped VCF created by GATK. Other VCF files created by other variant callers has not been tested 
-Input 2: Tab separated meta file. See example_meta.tsv for format. 
+Input 1: bgzipped VCF created by GATK. Other VCF files created by other variant callers has not been tested  
+Input 2: Tab separated meta file. See example_meta.tsv for format.  
 
 Output: Hail table - individual genotypes removed, VEP functional annotation, various summary counts/metrics, flattened structure for export to Elastic Search.
 
@@ -46,9 +46,9 @@ Variants with the MONOALLELIC filter are explicitly removed
 ```
 
 ## Wookie mistakes
-Python 3.6 is not the default python 
-$SPARK_HOME is set to an older version of Spark 
-Uses a version of hail contained in `./hail_builds`. Imported tables must be created by this version to avoid hail file format issues between versions 
+Python 3.6 is not the default python  
+$SPARK_HOME is set to an older version of Spark  
+Uses a version of hail contained in `./hail_builds`. Imported tables must be created by this version to avoid hail file format issues between versions  
 
 
 
