@@ -1,5 +1,5 @@
-# sfari_hail
-Hail v0.2 pipeline used to VCF file from SFARI for export into elastic search.
+# Pipeline used to annotate Exome and Genome
+Hail v0.2 pipeline used to prepare VCF file from SFARI and export into elastic search database.
 
 ## Requirements
 ```
@@ -33,17 +33,15 @@ python submit.py --run-locally ./hail_scripts/hail_annotate_pipeline.py --spark-
 
 ## Exome specific issues
 1. GLNexus option used for joint calling creates instances where some PL values are missing. This is problematic for splittling multi-allelic sites. 
-Current work around 
-```
-Set PL values to null/empty
-DP and GQ are used to consider high quality genotype calls for adjusted counts. Only DP is used for HQ consideration as GQ cannot not be calculated in all scenarios due to missing PL.
-```
+Current work around:  
+Set PL values to null/empty  
+DP and GQ are used to consider high quality genotype calls for adjusted counts. Only DP is used for HQ consideration as GQ cannot not be calculated in all scenarios due to missing PL.  
+
 2. There currently is no explicit PASS filter so any downstream filter dependent features cannot be used
-3. The MONOALLELIC filter and sites are problematic after multi-allelic sites are split into multiple bi-allelic sites. The biggest issue is that alleles can be represented multiple times across VCF lines
-Current work around
-```
+
+3. The MONOALLELIC filter and sites are problematic after multi-allelic sites are split into multiple bi-allelic sites. The biggest issue is that alleles can be represented multiple times across VCF lines  
+Current work around:  
 Variants with the MONOALLELIC filter are explicitly removed
-```
 
 ## Wookie mistakes
 Python 3.6 is not the default python  
