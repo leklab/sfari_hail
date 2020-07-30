@@ -95,7 +95,7 @@ DP and GQ are used to consider high quality (HQ) genotype calls for adjusted cou
 **Current work around:**  
 Variants with the `MONOALLELIC` filter are explicitly removed. Code changes are <a href="https://github.com/leklab/sfari_hail/commit/b98d0ac94d1417f551de38f345dcb60476a2a5c8">here</a>
 
-4. Hail assumes GRCh38 VCF data has the `chr` prefix. Chromosomes in this VCF does not have this prefix so the `chr` was appended on VCF import. Code detailed <a href="https://github.com/leklab/sfari_hail/blob/master/hail_scripts/hail_annotate_pipeline.py#L15-L17"here</a>
+4. Hail assumes GRCh38 VCF data has the `chr` prefix. Chromosomes in this VCF does not have this prefix so the `chr` was appended on VCF import. Code detailed <a href="https://github.com/leklab/sfari_hail/blob/master/hail_scripts/hail_annotate_pipeline.py#L15-L17">here</a>
 
 ## Genome VCF specific issues
 1. HQ genotype filter and downstream counts is not behaving correctly. This may be due to the non-standard formatting of the individual genotype field.  
