@@ -319,7 +319,15 @@ def reformat_freq_fields(ht):
         AC_proband = ht.info.AC_adj_proband,
         AN_proband = ht.info.AN_adj_proband,
         AF_proband = ht.info.AF_adj_proband,               
-        nhomalt_proband = ht.info.nhomalt_adj_proband,               
+        nhomalt_proband = ht.info.nhomalt_adj_proband,
+        AC_male = ht.info.AC_adj_male,
+        AN_male = ht.info.AN_adj_male,
+        AF_male = ht.info.AF_adj_male,               
+        nhomalt_male = ht.info.nhomalt_adj_male,
+        AC_female = ht.info.AC_adj_female,
+        AN_female = ht.info.AN_adj_female,
+        AF_female = ht.info.AF_adj_female,               
+        nhomalt_female = ht.info.nhomalt_adj_female,                              
     )
 
     #pprint.pprint(ht.describe())

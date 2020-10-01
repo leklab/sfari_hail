@@ -276,8 +276,8 @@ def make_freq_meta_index_dict(freq_meta):
     #pprint.pprint(index_dict)
     index_dict.update(index_globals(freq_meta, dict(group=GROUPS, proband=PROBAND)))
     #pprint.pprint(index_dict)
+    index_dict.update(index_globals(freq_meta, dict(group=GROUPS, sex=SEXES)))
 
-    #index_dict.update(index_globals(freq_meta, dict(group=GROUPS, sex=SEXES)))
     #index_dict.update(index_globals(freq_meta, dict(group=GROUPS, pop=POPS, sex=SEXES)))
     #index_dict.update(index_globals(freq_meta, dict(group=GROUPS, pop=['nfe'], subpop=NFE_SUBPOPS)))
     #index_dict.update(index_globals(freq_meta, dict(group=GROUPS, pop=['eas'], subpop=EAS_SUBPOPS)))

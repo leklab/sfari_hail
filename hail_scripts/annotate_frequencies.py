@@ -52,6 +52,7 @@ def annotate_frequencies(mt: hl.MatrixTable, meta_ht: hl.Table) -> hl.Table:
 
     mt = mt.annotate_cols(pop = meta_ht[mt.s].Ethnicity)
     mt = mt.annotate_cols(proband = meta_ht[mt.s].Proband)
+    mt = mt.annotate_cols(sex = meta_ht[mt.s].Sex)
 
 
     mt = annotate_adj(mt)
@@ -65,6 +66,9 @@ def annotate_frequencies(mt: hl.MatrixTable, meta_ht: hl.Table) -> hl.Table:
         ({'pop': pop}, mt.pop == pop) for pop in cut_data.pop])
 
     sample_group_filters.extend([({'proband': 'proband'}, mt.proband == 'Yes')])
+
+    sample_group_filters.extend([({'sex': 'male'}, mt.sex == 'M')])
+    sample_group_filters.extend([({'sex': 'female'}, mt.sex == 'F')])
 
     mt = mt.select_cols(group_membership=tuple(x[1] for x in sample_group_filters))
 

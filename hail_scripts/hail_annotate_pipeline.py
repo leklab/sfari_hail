@@ -29,6 +29,9 @@ def run_pipeline(args):
     meta_ht = hl.import_table(args.meta,delimiter='\t',key='ID')
     ht = annotate_frequencies(mt,meta_ht)
 
+    pprint.pprint(ht.describe())
+    pprint.pprint(ht.show())
+
     #VEP Annotate the Hail table (ie. sites-only) using GRCh38 configuration file
     ht = hl.vep(ht, 'vep85-loftee-ruddle-b38.json')
 
@@ -36,7 +39,10 @@ def run_pipeline(args):
     ht = prepare_ht_export(ht)
     ht = prepare_ht_for_es(ht)
 
-    ht.write(args.out,overwrite=True)
+    #pprint.pprint(ht.describe())
+    #pprint.pprint(ht.show())
+
+    #ht.write(args.out,overwrite=True)
 
     #ht = hl.read_table('/home/ml2529/PCGC_dev/data/pcgc_exomes.ht')
     #export_ht_to_es(ht)
