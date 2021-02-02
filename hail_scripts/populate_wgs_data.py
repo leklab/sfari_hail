@@ -11,7 +11,7 @@ from export_ht_to_es import *
 def run_pipeline(args):
     hl.init(log='./hail_annotation_pipeline.log')
     ht = hl.read_table(args.input)
-    export_ht_to_es(ht,index_name='sfari_genomes')
+    export_ht_to_es(ht,index_name='ssc_genomes')
 
 
 if __name__ == '__main__':
