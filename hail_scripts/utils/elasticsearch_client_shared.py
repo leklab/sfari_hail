@@ -109,7 +109,7 @@ class ElasticsearchClient:
             _meta (dict): optional _meta info for this index
                 (see https://www.elastic.co/guide/en/elasticsearch/reference/current/mapping-meta-field.html)
         """
-
+        '''
         index_mapping = {
             #"_size": {"enabled": "true" },   <--- needs mapper-size plugin to be installed in elasticsearch
             "_all": {"enabled": "false"},
@@ -127,6 +127,17 @@ class ElasticsearchClient:
                     index_mapping,
             }
         }
+        '''
+        '''
+            Types has been remove in ElasticSearch 7.x so having "variant" as type will error!
+            https://www.elastic.co/guide/en/elasticsearch/reference/7.17/removal-of-types.html
+        '''
+        elasticsearch_mapping = {
+            "mappings": {
+                "properties": elasticsearch_schema
+            }
+        }
+
 
         logger.info("create_or_update_mapping - elasticsearch schema: \n" + pformat(elasticsearch_schema))
 
@@ -141,6 +152,10 @@ class ElasticsearchClient:
                 #"index.store.throttle.type": "none",
             }
 
+            #print(index_type_name)
+            print(index_name)
+            print(elasticsearch_mapping)
+
             self.es.indices.create(index=index_name, body=elasticsearch_mapping)
         else:
             #existing_mapping = self.es.indices.get_mapping(index=index_name, doc_type=index_type_name)
@@ -149,6 +164,10 @@ class ElasticsearchClient:
             #existing_properties.update(elasticsearch_schema)
 
             logger.info("==> updating elasticsearch index %s/%s. New schema:\n%s" % (index_name, index_type_name, pformat(elasticsearch_schema)))
+
+            #print(index_type_name)
+            #print(index_name)
+            #print(index_mapping)
 
             self.es.indices.put_mapping(index=index_name, doc_type=index_type_name, body=index_mapping)
 
