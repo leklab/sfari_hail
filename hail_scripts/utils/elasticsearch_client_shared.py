@@ -157,11 +157,19 @@ class ElasticsearchClient:
             print(elasticsearch_mapping)
 
             self.es.indices.create(index=index_name, body=elasticsearch_mapping)
+
+        '''
         else:
             #existing_mapping = self.es.indices.get_mapping(index=index_name, doc_type=index_type_name)
-            #logger.info("==> Updating elasticsearch %s schema. Original schema: %s" % (index_name, pformat(existing_mapping)))
+
+            existing_mapping = self.es.indices.get_mapping(index=index_name)
+            logger.info("==> Updating elasticsearch %s schema. Original schema: %s" % (index_name, pformat(existing_mapping)))
+
+            print(existing_mapping)
+
             #existing_properties = existing_mapping[index_name]["mappings"][index_type_name]["properties"]
-            #existing_properties.update(elasticsearch_schema)
+            existing_properties = existing_mapping[index_name]["mappings"]["properties"]
+            existing_properties.update(elasticsearch_schema)
 
             logger.info("==> updating elasticsearch index %s/%s. New schema:\n%s" % (index_name, index_type_name, pformat(elasticsearch_schema)))
 
@@ -169,10 +177,14 @@ class ElasticsearchClient:
             #print(index_name)
             #print(index_mapping)
 
-            self.es.indices.put_mapping(index=index_name, doc_type=index_type_name, body=index_mapping)
+            print(elasticsearch_mapping)
+
+            #self.es.indices.put_mapping(index=index_name, doc_type=index_type_name, body=index_mapping)
+            self.es.indices.put_mapping(index=index_name, body=elasticsearch_mapping)
 
             #new_mapping = self.es.indices.get_mapping(index=index_name, doc_type=index_type_name)
             #logger.info("==> New elasticsearch %s schema: %s" % (index_name, pformat(new_mapping)))
+        '''
 
 
     def create_elasticsearch_snapshot(self, index_name, bucket, base_path, snapshot_repo):
