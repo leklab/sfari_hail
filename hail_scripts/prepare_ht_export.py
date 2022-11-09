@@ -366,7 +366,7 @@ def prepare_ht_export(ht: hl.Table) -> hl.Table:
     ht = ht.annotate(info=ht.info.annotate(**unfurl_nested_annotations(ht)))
 
 
-    ht = ht.select('info', 'filters', 'rsid', 'qual','vep')
+    ht = ht.select('info', 'filters', 'rsid', 'qual','vep','in_silico_predictors','allele_balance','genotype_depth','genotype_quality')
     #ht = ht.select('info', 'filters', 'rsid', 'qual')
 
 
