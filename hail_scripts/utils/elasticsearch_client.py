@@ -180,9 +180,15 @@ class ElasticsearchClient(BaseElasticsearchClient):
             block_size,
         )
 
+        '''
         hl.export_elasticsearch(
             table, self._host, int(self._port), index_name, index_type_name, block_size, elasticsearch_config, verbose
         )
+        '''
+        hl.export_elasticsearch(
+            table, self._host, int(self._port), index_name, "_doc", block_size, elasticsearch_config, verbose
+        )
+
 
         """
         Potentially useful config settings for export_elasticsearch(..)
